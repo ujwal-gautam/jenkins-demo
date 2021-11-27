@@ -12,11 +12,11 @@ node {
 	    def dockerImage
 	    // ip address of the docker private repository(nexus)
 
-	    def dockerImageTag = "docker-test${env.BUILD_NUMBER}"
+	    def dockerImageTag = "jenkins-demo${env.BUILD_NUMBER}"
 
 	    stage('Clone Repo') { // for display purposes
 	      // Get some code from a GitHub repository
-	      git 'https://github.com/ujwal-gautam/docker-test.git'
+	      git 'https://github.com/ujwal-gautam/jenkins-demo.git'
 	      // Get the Maven tool.
 	      // ** NOTE: This 'maven-3.6.0' Maven tool must be configured
 	      // **       in the global configuration.
@@ -38,7 +38,7 @@ node {
 
 // 	      sh "sudo service docker start"
 
-	      dockerImage = docker.build("docker-test:${env.BUILD_NUMBER}")
+	      dockerImage = docker.build("jenkins-demo:${env.BUILD_NUMBER}")
 	    }
 
 	    stage('Deploy Docker Image'){
@@ -47,11 +47,11 @@ node {
 
 	      echo "Docker Image Tag Name: ${dockerImageTag}"
 
-		    sh "docker stop docker-test-api"
+		    sh "docker stop docker-jenkins-demo"
 
-		  sh "docker rm docker-test-api"
+		  sh "docker rm docker-jenkins-demo"
 
-		    sh "docker run --restart=always --name docker-test-api -d -p 9011:9011 docker-test:${env.BUILD_NUMBER}"
+		    sh "docker run --restart=always --name docker-jenkins-demo -d -p 9011:9011 jenkins-demo:${env.BUILD_NUMBER}"
 
 		  // docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
 	      //    dockerImage.push("${env.BUILD_NUMBER}")
